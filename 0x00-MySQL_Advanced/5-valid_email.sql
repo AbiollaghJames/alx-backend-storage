@@ -2,15 +2,15 @@
 -- valid_email only when email is changed.
 -- use TRIGGER
 
-DELIMETER$$
+DELIMITER$$
 
 CREATE TRIGGER reset_email
-BEFORE UPDATE ON users
+AFTER UPDATE ON users
 FOR EACH ROW
 BEGIN
-	IF OLD.email != NEW.email THEN
+	IF NEW.email != OLD.email THEN
 		SET NEW.valid_email = 0;
 	END IF;
 END$$
 
-DELIMETER;
+DELIMITER;
