@@ -2,7 +2,7 @@
 -- valid_email only when email is changed.
 -- use TRIGGER
 
-DELIMITER$$
+DELIMITER $$
 
 CREATE TRIGGER reset_email BEFORE UPDATE ON users
 FOR EACH ROW
@@ -12,4 +12,4 @@ BEGIN
 	END IF;
 
 END$$
-DELIMITER;
+DELIMITER ;
