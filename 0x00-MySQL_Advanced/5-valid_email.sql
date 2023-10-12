@@ -5,7 +5,7 @@
 DELIMITER $$
 
 CREATE TRIGGER reset_email
-BEFORE UPDATE ON users
+AFTER UPDATE ON users
 FOR EACH ROW
 BEGIN
 	IF NEW.email != OLD.email THEN
