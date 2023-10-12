@@ -5,11 +5,11 @@
 DELIMETER$$
 
 CREATE TRIGGER reset_email
-BEFORE UPDATE ON users
+AFTER UPDATE ON users
 FOR EACH ROW
 BEGIN
-	IF OLD.email != NEW.email THEN
-		SET NEW.valid_email = 1;
+	IF NEW.email != OLD.email THEN
+		SET NEW.valid_email = 0;
 	END IF;
 END$$
 
