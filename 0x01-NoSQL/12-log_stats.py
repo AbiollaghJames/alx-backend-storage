@@ -19,28 +19,20 @@ from pymongo import MongoClient
 METHODS = ["GET", "POST", "PUT", "PATCH", "DELEE"]
 
 
-def stats(mongo_collection, opt=None):
+def log_stats(nginx_collection):
     """
     Function that provide stats about Nginx logs
     """
-    l = {}
-
-    if opt:
-        val = mongo_collection.count_documents(
-            {"method": {"$regex": opt}}
-        )
-        print(f"\tmethod {opt}: {val}")
-        return
-
-    res = mongo_collection.count_documents(l)
-    print(f"{res} logs")
+    print(f"{} logs".format(nginx_collection.count_documents({})))
     print("Methods:")
-    for method in METHODS:
-        stats(nginx_collection, method)
 
-    status = mongo_collection.count_documents({"path": "/status"})
-    print(f"{status} status check")
+    for method in METHODS:
+        count = len(list(nginx_collection.find({"method": method})))
+        print(f"\tmethod {method}: {count}")
+
+    status_check = len(list(nginx_collection.find({"method": "GET", "path": "/status"})))
+    print(f"{status_check}")
 
 if __name__ == "__main__":
-    nginx_collection = MongoClient('mongodb://localhost:27017').logs.nginx
-    stats(nginx_collection)
+    client = MongoClient('mongodb://localhost:27017')
+    log_stats(client.logs.nginx)
