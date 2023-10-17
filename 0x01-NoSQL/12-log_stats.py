@@ -16,29 +16,31 @@ Python script that provides some stats about Nginx logs stored in MongoDB:
 
 from pymongo import MongoClient
 
-""" MongoDB connection """
-client = MongoClient("mongodb://localhost:27017")
+METHODS = ["GET", "POST", "PUT", "PATCH", "DELEE"]
 
-"""access DB and collection """
-db = client["logs"]
-collection = db["nginx"]
 
-""" Docs in collection """
-logs = collection.count_documents({})
+def stats(mongo_collection, opt=None):
+    """
+    Function that provide stats about Nginx logs
+    """
+    l = {}
 
-""" Docs with http methods """
-methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-counts = {method: collection.count_documents(
-    {"method": method}
-) for method in methods}
+    if opt:
+        val = mongo_collection.count_documents(
+            {"method": {"$regex": opt}}
+        )
+        print(f"\tmethod {opt}: {val}")
+        return
 
-""" Docs with specific methods and path """
-spec_count = collection.count_documents({"method": "GET", "path": "/status"})
+    res = mongo_collection.count_documents(l)
+    print(f"{res} logs")
+    print("Methods:")
+    for method in METHODS:
+        stats(nginx_collection, method)
 
-"""statistics"""
-print(f"{logs} logs")
-print("Methods:")
+    status = mongo_collection.count_documents({"path": "/status"})
+    print(f"{status} status check")
 
-for method in methods:
-    print(f"\tmethod {method}: {counts[method]}")
-print(f"{spec_count} status check")
+if __name__ == "__main__":
+    nginx_collection = MongoClient('mongodb://localhost:27017').logs.nginx
+    stats(nginx_collection)
