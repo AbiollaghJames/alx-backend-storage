@@ -8,7 +8,7 @@ Python script that provides some stats about Nginx logs stored in MongoDB:
     first line: x logs where x is the number of documents in this collection
     second line: Methods:
     5 lines with the number of documents with the
-    method = ["GET", "POST", "PUT", "PATCH", "DELETE"] in this order (see example below - warning: it’s a tabulation before each line)
+    method = ["GET", "POST", "PUT", "PATCH", "DELETE"] in this order
     one line with the number of documents with:
     method=GET
     path=/status
@@ -27,8 +27,10 @@ collection = db["nginx"]
 logs = collection.count_documents({})
 
 """ Docs with http methods """
-methods = [ "GET", "POST", "PUT", "PATCH", "DELETE" ]
-counts = {method: collection.count_documents({"method": method}) for method in methods} 
+methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+counts = {method: collection.count_documents(
+    {"method": method}
+) for method in methods}
 
 """ Docs with specific methods and path """
 spec_count = collection.count_documents({"method": "GET", "path": "/status"})
