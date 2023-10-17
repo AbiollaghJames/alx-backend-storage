@@ -30,8 +30,10 @@ def log_stats(nginx_collection):
         count = len(list(nginx_collection.find({"method": method})))
         print(f"\tmethod {method}: {count}")
 
-    status_check = len(list(nginx_collection.find({"method": "GET", "path": "/status"})))
+    status_check = len(list(nginx_collection.find(
+        {"method": "GET", "path": "/status"})))
     print(f"{status_check}")
+
 
 if __name__ == "__main__":
     client = MongoClient('mongodb://localhost:27017')
