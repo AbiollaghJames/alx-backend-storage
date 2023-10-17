@@ -21,7 +21,7 @@ def log_stats(nginx_collection):
     """
     Function that provide stats about Nginx logs
     """
-    print(f"{} logs".format(nginx_collection.count_documents({})))
+    print("{} logs".format(nginx_collection.count_documents({})))
     print("Methods:")
     methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
