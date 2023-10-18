@@ -18,7 +18,7 @@ def cache_page(func: Callable) -> Callable:
     """cache page"""
 
     @wraps(func)
-    def wrapper(url: str) -> str:
+    def wrapper(url) -> str:
         """ wrapper """
         r.incr(f"count:{url}")
         cache_res = r.get(f"result: {url}")
