@@ -24,6 +24,7 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+
 def call_history(method: Callable) -> Callable:
     """
      a call_history decorator to store the history
@@ -42,6 +43,7 @@ def call_history(method: Callable) -> Callable:
         return n
     return wrapper
 
+
 def replay(func: Callable) -> None:
     """
     function to display the history of calls
@@ -57,6 +59,7 @@ def replay(func: Callable) -> None:
 
     for key, value in zip(inpt, output):
         print(f"{key}(*{key.decode('utf-8')}) -> {value.decode('utf-8')}")
+
 
 class Cache:
     """
@@ -78,9 +81,8 @@ class Cache:
 
         return key
 
-    def get(
-        self, key: str, fn: Optional[Callable] = None
-        ) -> Union[str, bytes, int, float]:
+    def get(self, key: str,
+            fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
 
         """
         convert the data back to the desired format
