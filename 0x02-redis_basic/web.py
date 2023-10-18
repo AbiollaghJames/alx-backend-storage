@@ -11,12 +11,13 @@ from functools import wraps
 from typing import Callable
 
 r = redis.Redis()
+"""redis instance"""
 
 
 def cache_page(func: Callable) -> Callable:
     """cache page"""
 
-    @wraps(method)
+    @wraps(func)
     def wrapper(url):
         """ wrapper """
         r.incr(f"count:{url}")
@@ -25,7 +26,7 @@ def cache_page(func: Callable) -> Callable:
         if cache_res:
             return cache_res.decode('utf-8')
 
-        cache_res = method(url)
+        cache_res = func(url)
         r.set(f"count:{url}", 0)
         r.setex(f"result:{url}", 10, cache_res)
         return cache_res
