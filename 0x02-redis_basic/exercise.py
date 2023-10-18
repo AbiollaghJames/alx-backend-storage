@@ -49,16 +49,16 @@ def replay(func: Callable) -> None:
     function to display the history of calls
     of a particular function.
     """
-    redis = redis.Redis()
+    rs = redis.Redis()
     key = func.__qualname__
-    inpt = redis.lrange(f"{key}: inputs", 0, -1)
-    output = redis.lrange(f"{key}: outputs", 0, -1)
+    inpt = rs.lrange(f"{key}:inputs", 0, -1)
+    output = rs.lrange(f"{key}:outputs", 0, -1)
     calls = len(inpt)
     str_times = "time" if calls == 1 else "times"
     print(f"{key} was called {calls} {str_times}:")
 
-    for key, value in zip(inpt, output):
-        print(f"{key}(*{key.decode('utf-8')}) -> {value.decode('utf-8')}")
+    for inp, outp in zip(inpt, output):
+        print(f"{key}(*{inp.decode('utf-8')}) -> {outp.decode('utf-8')}")
 
 
 class Cache:
