@@ -7,13 +7,16 @@ URL and returns it.
 
 import redis
 import requests
+from functools import wraps
+from typing import Callable
 
 r = redis.Redis()
 
 
-def cache_page(func):
+def cache_page(func: Callable) -> Callable:
     """cache page"""
-
+    
+    @wraps
     def wrapper(url):
         """ wrapper """
         key_count = f"count:{url}"
