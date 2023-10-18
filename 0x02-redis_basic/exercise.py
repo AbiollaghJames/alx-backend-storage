@@ -26,3 +26,21 @@ class Cache:
         self._redis.set(key, data)
 
         return key
+
+    def get(
+        self, key: str, fn: Optional[Callable] = None
+        ) -> Union[str, bytes, int, float]:
+
+        """
+        convert the data back to the desired format
+        """
+        val = self._redis.get(key)
+
+        return val if not fn else fn(val)
+
+    def get_str(self, key):
+        val = self._redis.get(key)
+        return val.decode('utf-8')
+
+    def get_int(self, key):
+        return self.get(key, int)
