@@ -24,6 +24,24 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+def call_history(method: Callable) -> Callable:
+    """
+     a call_history decorator to store the history
+     of inputs and outputs for a particular function.
+    """
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """ wrapper """
+        key = method.__qualname__
+        inpt = key + ":inputs"
+        output = key + ":outputs"
+        data = str(args)
+        self._redis.rpush(inpt, data)
+        n = method(self, *args, **kwargs)
+        self._redis.rpush(output, str(n))
+        return n
+    return wrapper
+
 class Cache:
     """
     Writing string to Redis
@@ -34,6 +52,7 @@ class Cache:
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         stores input data in Redis
