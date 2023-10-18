@@ -44,13 +44,13 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 
-def replay(func: Callable) -> None:
+def replay(decorated_func: Callable) -> None:
     """
     function to display the history of calls
     of a particular function.
     """
     rs = redis.Redis()
-    key = func.__qualname__
+    key = decorated_func.__qualname__
     inpt = rs.lrange(f"{key}:inputs", 0, -1)
     output = rs.lrange(f"{key}:outputs", 0, -1)
     calls = len(inpt)
