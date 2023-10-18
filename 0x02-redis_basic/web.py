@@ -16,8 +16,8 @@ r = redis.Redis()
 def cache_page(func: Callable) -> Callable:
     """cache page"""
     
-    @wraps
-    def wrapper(url):
+    @wraps(method)
+    def wrapper(url) -> str:
         """ wrapper """
         key_count = f"count:{url}"
         count_access = r.incr(key_count)
