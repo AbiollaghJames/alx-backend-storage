@@ -21,19 +21,17 @@ def log_stats(nginx_collection):
     """
     Function that provide stats about Nginx logs
     """
-    print("{} logs".format(nginx_collection.count_documents({})))
+    print(f"{nginx_collection.estimated_document_count()} logs")
     print("Methods:")
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-
-    for method in methods:
-        count = len(list(nginx_collection.find({"method": method})))
+    for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
+        count = nginx_collection.count_documents({"method": method})
         print(f"\tmethod {method}: {count}")
 
-    status_check = len(list(nginx_collection.find(
-        {"method": "GET", "path": "/status"})))
-    print(f"{status_check}")
+    gets = nginx_collection.count_documents(
+        {"method": "GET", "path": "/status"})
+    print(f"{gets} status check")
 
 
 if __name__ == "__main__":
-    client = MongoClient('mongodb://127.0.0.1:27017')
-    log_stats(client.logs.nginx)
+    nginx_collection = MongoClient('mongodb://127.0.0.1:27017').logs.nginx
+    log_stats(nginx_collection)
